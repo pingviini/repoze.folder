@@ -1,9 +1,11 @@
-from zope.interface import implements
+from repoze.folder.interfaces import (
+    IObjectAddedEvent,
+    IObjectWillBeAddedEvent,
+    IObjectRemovedEvent,
+    IObjectWillBeRemovedEvent,
+)
+from zope.interface import implementer
 
-from repoze.folder.interfaces import IObjectAddedEvent
-from repoze.folder.interfaces import IObjectWillBeAddedEvent
-from repoze.folder.interfaces import IObjectRemovedEvent
-from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 
 class _ObjectEvent(object):
     def __init__(self, object, parent, name):
@@ -11,14 +13,22 @@ class _ObjectEvent(object):
         self.parent = parent
         self.name = name
 
+
+@implementer(IObjectAddedEvent)
 class ObjectAddedEvent(_ObjectEvent):
-    implements(IObjectAddedEvent)
+    """ObjectAddedEvent."""
 
+
+@implementer(IObjectWillBeAddedEvent)
 class ObjectWillBeAddedEvent(_ObjectEvent):
-    implements(IObjectWillBeAddedEvent)
+    """ObjectWillBeAddedEvent."""
 
+
+@implementer(IObjectRemovedEvent)
 class ObjectRemovedEvent(_ObjectEvent):
-    implements(IObjectRemovedEvent)
+    """ObjectRemovedEvent."""
 
+
+@implementer(IObjectWillBeRemovedEvent)
 class ObjectWillBeRemovedEvent(_ObjectEvent):
-    implements(IObjectWillBeRemovedEvent)
+    """ObjectWillBeRemovedEvent."""

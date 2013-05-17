@@ -1,6 +1,7 @@
 import unittest
 from zope.component.testing import PlacelessSetup
 
+
 class FolderTests(unittest.TestCase, PlacelessSetup):
     def setUp(self):
         PlacelessSetup.setUp(self)
@@ -21,7 +22,7 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         from zope.interface.verify import verifyClass
         from repoze.folder.interfaces import IFolder
         verifyClass(IFolder, klass)
-        
+
     def test_inst_provides_IFolder(self):
         from zope.interface.verify import verifyObject
         from repoze.folder.interfaces import IFolder
@@ -35,62 +36,62 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         gsm.registerHandler(listener, (Interface, iface,))
 
     def test_keys(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.assertEqual(list(folder.keys()), ['a', 'b'])
 
     def test_keys_with_order(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder.order = ['b', 'a']
         self.assertEqual(list(folder.keys()), ['b', 'a'])
 
     def test_keys_after_del_order(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder.order = ['b', 'a']
         del folder.order
         self.assertEqual(list(folder.keys()), ['a', 'b'])
 
     def test__iter__(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.assertEqual(list(folder), ['a', 'b'])
 
     def test__iter___with_order(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder.order = ['b', 'a']
         self.assertEqual(list(folder), ['b', 'a'])
 
     def test_values(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.assertEqual(list(folder.values()), [1, 2])
 
     def test_values_with_order(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder.order = ['b', 'a']
         self.assertEqual(list(folder.values()), [2, 1])
 
     def test_items(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.assertEqual(list(folder.items()), [('a', 1), ('b', 2)])
 
     def test_items_with_order(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder.order = ['b', 'a']
         self.assertEqual(list(folder.items()), [('b', 2), ('a', 1)])
 
     def test__len__(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.assertEqual(len(folder), 2)
         del folder['a']
         self.assertEqual(len(folder), 1)
 
     def test__len___num_objects_None(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         folder._num_objects = None
         self.assertEqual(len(folder), 2)
         del folder['a']
         self.assertEqual(len(folder), 1)
 
     def test__contains__(self):
-        folder = self._makeOne({'a':1, 'b':2})
+        folder = self._makeOne({'a': 1, 'b': 2})
         self.failUnless('a' in folder)
         self.failIf('c' in folder)
 
@@ -101,7 +102,7 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
     def test___setitem__nonstring(self):
         folder = self._makeOne()
         self.assertRaises(TypeError, folder.__setitem__, None)
-        
+
     def test___setitem__8bitstring(self):
         folder = self._makeOne()
         self.assertRaises(TypeError, folder.__setitem__, '\xff')
@@ -115,8 +116,10 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         from repoze.folder.interfaces import IObjectWillBeAddedEvent
         from repoze.folder.interfaces import IObjectAddedEvent
         events = []
+
         def listener(object, event):
             events.append(event)
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         folder = self._makeOne()
@@ -147,8 +150,10 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         from repoze.folder.interfaces import IObjectWillBeAddedEvent
         from repoze.folder.interfaces import IObjectAddedEvent
         events = []
+
         def listener(object, event):
             events.append(event)
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         folder = self._makeOne()
@@ -169,8 +174,10 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
     def test_add_suppress_events(self):
         from repoze.folder.interfaces import IObjectEvent
         events = []
+
         def listener(object, event):
-            events.append(event) #pragma NO COVER
+            events.append(event)  # pragma NO COVER
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         folder = self._makeOne()
@@ -190,7 +197,7 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
 
     def test___setitem__exists(self):
         dummy = DummyModel()
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         self.assertEqual(folder._num_objects(), 1)
         self.assertRaises(KeyError, folder.__setitem__, 'a', dummy)
         self.assertEqual(folder._num_objects(), 1)
@@ -200,13 +207,15 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         from repoze.folder.interfaces import IObjectRemovedEvent
         from repoze.folder.interfaces import IObjectWillBeRemovedEvent
         events = []
+
         def listener(object, event):
             events.append(event)
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         dummy.__parent__ = None
         dummy.__name__ = None
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         self.assertEqual(folder._num_objects(), 1)
         del folder['a']
         self.assertEqual(folder._num_objects(), 0)
@@ -230,7 +239,7 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         dummy = DummyModel()
         dummy.__parent__ = None
         dummy.__name__ = None
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         self.assertTrue(folder.remove("a") is dummy)
 
     def test_remove_send_events(self):
@@ -238,13 +247,15 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         from repoze.folder.interfaces import IObjectRemovedEvent
         from repoze.folder.interfaces import IObjectWillBeRemovedEvent
         events = []
+
         def listener(object, event):
             events.append(event)
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         dummy.__parent__ = None
         dummy.__name__ = None
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         self.assertEqual(folder._num_objects(), 1)
         folder.remove('a', send_events=True)
         self.assertEqual(folder._num_objects(), 0)
@@ -263,13 +274,15 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
     def test_remove_suppress_events(self):
         from repoze.folder.interfaces import IObjectEvent
         events = []
+
         def listener(object, event):
-            events.append(event) #pragma NO COVER
+            events.append(event)  # pragma NO COVER
+
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         dummy.__parent__ = None
         dummy.__name__ = None
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         self.assertEqual(folder._num_objects(), 1)
         folder.remove('a', send_events=False)
         self.assertEqual(folder._num_objects(), 0)
@@ -293,10 +306,12 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         dummy.__parent__ = None
         dummy.__name__ = None
         events = []
+
         def listener(object, event):
             events.append(event)
+
         self._registerEventListener(listener, IObjectEvent)
-        folder = self._makeOne({'a':dummy})
+        folder = self._makeOne({'a': dummy})
         result = folder.pop('a')
         self.assertEqual(result, dummy)
         self.assertEqual(folder._num_objects(), 0)
@@ -394,7 +409,7 @@ class UnicodifyTests(unittest.TestCase):
     def test_unicode_works(self):
         result = self._callFUT(unicode('La Pe\xc3\xb1a', 'utf-8'))
         self.assertEqual(result, unicode('La Pe\xc3\xb1a', 'utf-8'))
-        
+
     def test_unknown_encoding_breaks(self):
         name = unicode('La Pe\xc3\xb1a', 'utf-8').encode('utf-16')
         self.assertRaises(TypeError, self._callFUT, name)
@@ -403,6 +418,6 @@ class UnicodifyTests(unittest.TestCase):
         name = unicode('La Pe\xc3\xb1a', 'utf-8').encode('utf-16')
         self.assertRaises(TypeError, self._callFUT, name, 'utf-8')
 
+
 class DummyModel:
     pass
-

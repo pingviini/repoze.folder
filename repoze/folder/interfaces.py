@@ -1,8 +1,11 @@
 from zope.component.interfaces import IObjectEvent
-from zope.interface import Interface
-from zope.interface import Attribute
+from zope.interface import (
+    Interface,
+    Attribute
+)
 
 marker = object()
+
 
 class IObjectWillBeAddedEvent(IObjectEvent):
     """ An event type sent when an before an object is added """
@@ -11,11 +14,13 @@ class IObjectWillBeAddedEvent(IObjectEvent):
     name = Attribute('The name which the object is being added to the folder '
                      'with')
 
+
 class IObjectAddedEvent(IObjectEvent):
     """ An event type sent when an object is added """
     object = Attribute('The object being added')
     parent = Attribute('The folder to which the object is being added')
     name = Attribute('The name of the object within the folder')
+
 
 class IObjectWillBeRemovedEvent(IObjectEvent):
     """ An event type sent before an object is removed """
@@ -23,11 +28,13 @@ class IObjectWillBeRemovedEvent(IObjectEvent):
     parent = Attribute('The folder from which the object is being removed')
     name = Attribute('The name of the object within the folder')
 
+
 class IObjectRemovedEvent(IObjectEvent):
     """ An event type sent when an object is removed """
     object = Attribute('The object being removed')
     parent = Attribute('The folder from which the object is being removed')
     name = Attribute('The name of the object within the folder')
+
 
 class IFolder(Interface):
     """ A Folder which stores objects using Unicode keys.
